@@ -119,16 +119,32 @@ f = plan.get("food", {})
 j = plan.get("judging", {})
 is_valid = plan.get("valid", False)
 
-kpi1, kpi2, kpi3, kpi4, kpi5, kpi6, kpi7, kpi8, kpi9 = st.columns(9)
-kpi1.metric("Status", "VALID" if is_valid else "INVALID", delta="All checks pass" if is_valid else "Violations", delta_color="normal" if is_valid else "inverse")
-kpi2.metric("Budget", f"PKR {b.get('budget_total', 0):,}")
-kpi3.metric("Projected", f"PKR {b.get('projected_total', 0):,}")
-kpi4.metric("Remaining", f"PKR {b.get('remaining', 0):,}")
-kpi5.metric("Venue", v.get("name", "None").title() if v else "None")
-kpi6.metric("Headcount", f.get("headcount", 0))
-kpi7.metric("Judges", f"{j.get('judges_needed', 0)} / {j.get('confirmed', 0)}")
-kpi8.metric("Model Calls", total_calls)
-kpi9.metric("Total Tokens", f"{grand_total_tokens:,}")
+# Custom CSS to prevent metric truncation
+st.markdown("""
+<style>
+[data-testid="stMetricValue"] {
+    font-size: 1.35rem !important;
+    white-space: nowrap !important;
+}
+[data-testid="stMetricLabel"] {
+    font-size: 0.85rem !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# Top KPI Strip (2 clean rows so all figures fit without truncation)
+row1_col1, row1_col2, row1_col3, row1_col4, row1_col5 = st.columns(5)
+row1_col1.metric("Status", "VALID" if is_valid else "INVALID", delta="All checks pass" if is_valid else "Violations", delta_color="normal" if is_valid else "inverse")
+row1_col2.metric("Venue", v.get("name", "None").title() if v else "None")
+row1_col3.metric("Headcount", f"{f.get('headcount', 0)} attendees")
+row1_col4.metric("Judges (Needed / Conf)", f"{j.get('judges_needed', 0)} / {j.get('confirmed', 0)}")
+row1_col5.metric("Model Calls", total_calls)
+
+row2_col1, row2_col2, row2_col3, row2_col4 = st.columns(4)
+row2_col1.metric("Total Budget", f"PKR {b.get('budget_total', 0):,}")
+row2_col2.metric("Projected Total", f"PKR {b.get('projected_total', 0):,}")
+row2_col3.metric("Remaining Balance", f"PKR {b.get('remaining', 0):,}")
+row2_col4.metric("Total Tokens", f"{grand_total_tokens:,}")
 
 st.markdown("---")
 
