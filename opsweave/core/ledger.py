@@ -51,42 +51,40 @@ class ParseError(Exception):
 
 def build_prompt_for_reading(messages: list[dict], active_keys: list[str] | None = None) -> tuple[str, str]:
     """
-    Builds token-lean (<= ~350 tokens) system prompt and compact user prompt.
+    Builds token-lean (<= ~250 tokens) system prompt and compact user prompt.
     System prompt defines exact JSON schema, compact allowed kinds, and extraction rules.
     """
     system_prompt = (
-        "Extract event planning facts from messages into strict JSON format:\n"
+        'Extract event planning facts into compact JSON:\n'
         '{"m":[{"id":"M1","r":1,"i":[{"k":"attendance","n":"students","v":150,"q":"150 students"}]}]}\n'
-        "Allowed kinds and fields:\n"
-        "- attendance: n (students|staff|judges|other), v (count), q\n"
-        "- team_size: v (students per team), q\n"
-        "- budget_total: p (PKR), q\n"
-        "- event_minutes: v (minutes), q\n"
-        "- break: n (label), v (minutes), q\n"
-        "- fixed_time: n (label), t (HH:MM), q\n"
-        "- venue: n (name), v (capacity), p (price PKR), f ([facilities]), q\n"
-        "- venue_need: n (facility), q\n"
-        "- venue_unavailable: n (venue name), q\n"
-        "- food_price: n (option name), p (price per head PKR), q\n"
-        "- food_fee: n (label), p (PKR), q\n"
-        "- food_order: v (count), q\n"
-        "- food_need: n (description), v (count), q\n"
-        "- judges_confirmed: v (count), q\n"
-        "- judge_change: v (signed count +/-), q\n"
-        "- judge_fee: p (PKR per judge), q\n"
-        "- judge_minutes: v (minutes per team), q\n"
-        "- judge_max_teams: v (max teams per judge), q\n"
-        "- judge_delay: v (minutes late), q\n"
-        "- committed: n (item name), p (PKR), q\n"
-        "- proposal: n (label), p (PKR), q\n"
-        "- approve: n (proposal label), q\n"
-        "- cap: n (area name), p (PKR), q\n"
-        "- rule: n (text), a (venue|schedule|food|judging|budget), q\n\n"
-        "Return JSON only. No explanations. Do not copy message text except the short verbatim quote q (max 12 words). "
-        "Amounts are integers in PKR without commas. Messages may be English or Roman Urdu. "
-        "If a message is irrelevant to the event set r=0 and i=[]. "
-        "Use short stable lowercase names n and REUSE the exact same name for the same item. "
-        "Use kind 'rule' for any constraint that fits no other kind. Never invent values."
+        'Kinds & fields:\n'
+        '- attendance: n (students|staff|judges|other), v (count), q\n'
+        '- team_size: v (students/team), q\n'
+        '- budget_total: p (PKR), q\n'
+        '- event_minutes: v (minutes), q\n'
+        '- break: n (label), v (minutes), q\n'
+        '- fixed_time: n (label), t (HH:MM), q\n'
+        '- venue: n (name), v (capacity), p (PKR), f ([facilities]), q\n'
+        '- venue_need: n (facility), q\n'
+        '- venue_unavailable: n (venue name), q\n'
+        '- food_price: n (option), p (PKR/head), q\n'
+        '- food_fee: n (label), p (PKR), q\n'
+        '- food_order: v (count), q\n'
+        '- food_need: n (text), v (count), q\n'
+        '- judges_confirmed: v (count), q\n'
+        '- judge_change: v (+/- count), q\n'
+        '- judge_fee: p (PKR/judge), q\n'
+        '- judge_minutes: v (min/team), q\n'
+        '- judge_max_teams: v (max teams/judge), q\n'
+        '- judge_delay: v (minutes late), q\n'
+        '- committed: n (item), p (PKR), q\n'
+        '- proposal: n (label), p (PKR), q\n'
+        '- approve: n (proposal label), q\n'
+        '- cap: n (area), p (PKR), q\n'
+        '- rule: n (text), a (venue|schedule|food|judging|budget), q\n\n'
+        'Rules: JSON only. No whitespace or line-breaks in JSON. Amounts: integer PKR (no commas). '
+        'Short verbatim quote q (<=12 words). If irrelevant: r=0, i=[]. '
+        'Short stable lowercase n, reuse identical names. English or Roman Urdu. Never invent values.'
     )
 
     user_lines = [f"{m['id']}: {m['raw']}" for m in messages]
