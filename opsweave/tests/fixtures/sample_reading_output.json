@@ -1,0 +1,191 @@
+{
+  "m": [
+    {
+      "id": "M1",
+      "r": 1,
+      "i": [
+        {
+          "k": "approve",
+          "n": "hackathon",
+          "q": "Approved: a 4-hour hackathon"
+        },
+        {
+          "k": "event_minutes",
+          "v": 240,
+          "q": "4-hour hackathon"
+        },
+        {
+          "k": "attendance",
+          "n": "students",
+          "v": 150,
+          "q": "150 students"
+        },
+        {
+          "k": "team_size",
+          "v": 3,
+          "q": "teams of 3"
+        },
+        {
+          "k": "budget_total",
+          "p": 650000,
+          "q": "budget is Rs 650,000, all in"
+        },
+        {
+          "k": "attendance",
+          "n": "staff",
+          "v": 10,
+          "q": "Ten staff will be on duty"
+        },
+        {
+          "k": "break",
+          "n": "prayer",
+          "v": 15,
+          "q": "15-minute prayer break"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "r": 1,
+      "i": [
+        {
+          "k": "venue",
+          "n": "room d",
+          "v": 80,
+          "p": 40000,
+          "q": "Room D seats 80 at Rs 40,000"
+        },
+        {
+          "k": "venue",
+          "n": "hall a",
+          "v": 200,
+          "p": 120000,
+          "q": "Hall A seats 200 at Rs 120,000"
+        },
+        {
+          "k": "venue",
+          "n": "hall b",
+          "v": 200,
+          "p": 150000,
+          "f": [
+            "standby generator"
+          ],
+          "q": "Hall B seats 200 at Rs 150,000. Halls B and C have a standby generator."
+        },
+        {
+          "k": "venue",
+          "n": "hall c",
+          "v": 300,
+          "p": 220000,
+          "f": [
+            "standby generator"
+          ],
+          "q": "Hall C seats 300 at Rs 220,000. Halls B and C have a standby generator."
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "r": 1,
+      "i": [
+        {
+          "k": "food_price",
+          "n": "standard lunch box",
+          "p": 1000,
+          "q": "Standard lunch box Rs 1,000 per head."
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "r": 1,
+      "i": [
+        {
+          "k": "food_price",
+          "n": "standard lunch box",
+          "p": 1200,
+          "q": "Standard lunch box ab Rs 1,200 per head"
+        },
+        {
+          "k": "food_price",
+          "n": "basic",
+          "p": 800,
+          "q": "basic wala Rs 800"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "r": 1,
+      "i": [
+        {
+          "k": "judges_confirmed",
+          "v": 20,
+          "q": "20 judges have confirmed."
+        },
+        {
+          "k": "judge_fee",
+          "p": 5000,
+          "q": "honorarium is Rs 5,000 each."
+        },
+        {
+          "k": "judge_minutes",
+          "v": 15,
+          "q": "judge needs 15 minutes per team"
+        },
+        {
+          "k": "judge_max_teams",
+          "v": 3,
+          "q": "cover no more than three teams."
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "r": 1,
+      "i": [
+        {
+          "k": "committed",
+          "n": "prizes",
+          "p": 100000,
+          "q": "prizes Rs 100,000"
+        },
+        {
+          "k": "committed",
+          "n": "backup internet",
+          "p": 20000,
+          "q": "backup internet Rs 20,000"
+        },
+        {
+          "k": "committed",
+          "n": "printing",
+          "p": 10000,
+          "q": "printing Rs 10,000."
+        }
+      ]
+    },
+    {
+      "id": "M7",
+      "r": 1,
+      "i": [
+        {
+          "k": "proposal",
+          "n": "dj",
+          "p": 50000,
+          "q": "The quote is Rs 50,000."
+        }
+      ]
+    },
+    {
+      "id": "M8",
+      "r": 1,
+      "i": [
+        {
+          "k": "judge_delay",
+          "v": 10,
+          "q": "10 minutes late"
+        }
+      ]
+    }
+  ]
+}

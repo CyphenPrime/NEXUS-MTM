@@ -1,0 +1,42 @@
+{
+  "teams": 50,
+  "headcount": 177,
+  "venue": {
+    "name": "hall a",
+    "capacity": 200,
+    "price": 120000
+  },
+  "food": {
+    "cost": 212400,
+    "price_per_head": 1200
+  },
+  "judging": {
+    "judges_needed": 17,
+    "confirmed": 20,
+    "honorarium": 85000,
+    "honorarium_all_confirmed": 100000
+  },
+  "budget": {
+    "committed_total": 130000,
+    "projected_total": 547400,
+    "remaining": 102600
+  },
+  "schedule": {
+    "duration": 240,
+    "opening": 15,
+    "build_a": 55,
+    "prayer_break": 15,
+    "lunch": 30,
+    "build_b": 55,
+    "judging_window": 55,
+    "closing": 15
+  },
+  "update_printing": {
+    "projected_total": 552400,
+    "remaining": 97600
+  },
+  "wrong_message": {
+    "rejected": true,
+    "shortfall": 77
+  }
+}
