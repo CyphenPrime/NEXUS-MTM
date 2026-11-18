@@ -27,48 +27,47 @@ def _timeout_handler(timeout_seconds: int):
 
 
 def print_compact_summary(plan: dict):
-    """Prints a clear compact summary of the five plan areas and checklist."""
+    """Prints a clear compact summary of the five plan areas covering all requirements."""
     print("\n" + "=" * 70)
-    print("OPSWEAVE EVENT PLAN SUMMARY")
+    print("OPSWEAVE EVENT PLAN (THE ANSWER)")
     print("=" * 70)
 
-    # 1. Venue & Headcount
+    # 1. Venue: which hall, its seats and its cost
     v = plan.get("venue", {}).get("chosen")
-    v_str = f"{v['name'].title()} (Cap {v['capacity']}, PKR {v['price']:,})" if v else "None"
+    if v:
+        v_str = f"{v['name'].title()} | Seats: {v['capacity']} | Cost: Rs {v['price']:,}"
+    else:
+        v_str = "None (No eligible venue found)"
+    print(f"Venue   : {v_str}")
+
+    # 2. Schedule: the timeline, including the prayer break and judging
+    s = plan.get("schedule", {})
+    print(f"Schedule: {s.get('duration', 0)} min total timeline")
+    for blk in s.get("blocks", []):
+        print(f"  - [{blk['start_offset']:03d}m - {blk['end_offset']:03d}m] ({blk['duration']:02d}m) {blk['name']} ({blk['note']})")
+
+    # 3. Food: box type, quantity and cost
     f = plan.get("food", {})
-    hc = f.get("headcount", "Unknown")
-    print(f"VENUE    : {v_str}")
-    print(f"HEADCOUNT: {hc} attendees")
-
-    # 2. Food
     f_opt = f.get("chosen")
-    f_str = f"{f_opt['name'].title()} @ PKR {f_opt['price']:,}/head (Total PKR {f.get('cost', 0):,})" if f_opt else "None"
-    print(f"FOOD     : {f_str}")
+    if f_opt:
+        qty = f.get("order_quantity") or f.get("headcount")
+        f_str = f"Type: {f_opt['name'].title()} | Quantity: {qty} boxes | Cost: Rs {f.get('cost', 0):,} (at Rs {f_opt['price']:,}/head + Rs {f.get('fees', 0):,} delivery)"
+    else:
+        f_str = "None"
+    print(f"Food    : {f_str}")
 
-    # 3. Judging
+    # 4. Judging: number of judges and their cost
     j = plan.get("judging", {})
-    print(
-        f"JUDGING  : {j.get('judges_needed', 0)} needed ({j.get('confirmed', 0)} confirmed) | "
-        f"Honorarium: PKR {j.get('honorarium', 0):,}"
-    )
+    j_count = j.get("judges_needed", 0)
+    j_cost = j.get("honorarium", 0)
+    print(f"Judging : Number of Judges: {j_count} needed ({j.get('confirmed', 0)} confirmed) | Cost: Rs {j_cost:,}")
 
-    # 4. Budget
+    # 5. Budget: the total against Rs 400,000, and whether it fits
     b = plan.get("budget", {})
     b_tot = b.get("budget_total", 0)
-    b_comm = b.get("committed_total", 0)
-    b_sel = b.get("selected_total", 0)
     b_proj = b.get("projected_total", 0)
-    b_rem = b.get("remaining", 0)
-    print(
-        f"BUDGET   : PKR {b_tot:,} Total | Committed: PKR {b_comm:,} | Selected: PKR {b_sel:,} | "
-        f"Projected: PKR {b_proj:,} | Remaining: PKR {b_rem:,}"
-    )
-
-    # 5. Schedule Table
-    s = plan.get("schedule", {})
-    print("\nSCHEDULE TIMELINE:")
-    for blk in s.get("blocks", []):
-        print(f"  [{blk['start_offset']:03d}m - {blk['end_offset']:03d}m] ({blk['duration']:02d}m) {blk['name']} ({blk['note']})")
+    b_fits = "FITS" if (b_tot is not None and b_proj <= b_tot) else "DOES NOT FIT"
+    print(f"Budget  : Total Projected: Rs {b_proj:,} against Budget: Rs {b_tot:,} -> Status: {b_fits}")
 
     # 6. Checks
     print("\nVALIDATION CHECKLIST:")

@@ -82,6 +82,9 @@ def build_prompt_for_reading(messages: list[dict], active_keys: list[str] | None
         '- approve: n (proposal label), q\n'
         '- cap: n (area), p (PKR), q\n'
         '- rule: n (text), a (venue|schedule|food|judging|budget), q\n\n'
+        'Normalization Rules for Facilities & Needs:\n'
+        'Normalize accessibility facilities/needs to standard tags: "step-free access", "ramp access", "wheelchair", "ground floor" -> all include "step-free access".\n'
+        'Normalize AV/projector/screen to "projector" or "av".\n'
         'Rules: JSON only. No whitespace or line-breaks in JSON. Amounts: integer PKR (no commas). '
         'Short verbatim quote q (<=12 words). If irrelevant: r=0, i=[]. '
         'Short stable lowercase n, reuse identical names. English or Roman Urdu. Never invent values.'
@@ -204,8 +207,8 @@ def parse_reading_output(text: str) -> list[dict]:
 
 def verify_evidence(item: dict, raw_message: str) -> str:
     """
-    Verifies that quote q is a case-insensitive, whitespace-normalized substring
-    of the raw message. Returns 'active' if valid, 'unverified' if missing or mismatch.
+    Verifies that quote q (or key segments of it if multiple clauses were combined)
+    matches the raw message. Returns 'active' if valid, 'unverified' if missing or mismatch.
     """
     quote = item.get("q", "").strip()
     if not quote:
@@ -214,9 +217,15 @@ def verify_evidence(item: dict, raw_message: str) -> str:
     norm_quote = re.sub(r"\s+", " ", quote.lower())
     norm_raw = re.sub(r"\s+", " ", raw_message.lower())
 
-    # Quote must be <= 12 words and present in the verbatim raw message
     if norm_quote in norm_raw:
         return "active"
+
+    # If the LLM spliced two clauses separated by a period or sentence (e.g. "Hall 2 seats 180... Only Halls 2 and 3...")
+    # check if each sentence/clause individually appears in norm_raw
+    clauses = [c.strip() for c in re.split(r"[.;\n]+", norm_quote) if c.strip()]
+    if len(clauses) > 1 and all(clause in norm_raw for clause in clauses):
+        return "active"
+
     return "unverified"
 
 

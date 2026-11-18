@@ -70,22 +70,12 @@ class Trace:
         return f"TOTAL TOKENS: input={tot['input_tokens']} output={tot['output_tokens']} total={tot['total_tokens']}"
 
     def render_calls_text(self) -> str:
-        """Renders only the CALL #n blocks from the trace."""
+        """Renders only the CALL #n blocks from the trace according to user format."""
         lines = []
         for entry in self.entries:
             if entry["type"] == "call":
                 c = entry["data"]
-                lines.append(
-                    f"CALL #{c['call_number']} | model: {c['model']} | area: {c['area']} | "
-                    f"seconds: {c.get('seconds', 0.0)} | status: {c.get('status', 'success')}"
-                )
-                lines.append(f"INPUT : {c.get('input', '')}")
-                lines.append(f"OUTPUT: {c.get('output', '')}")
-                in_str = str(c["input_tokens"]) if c.get("input_tokens") is not None else "unavailable"
-                out_str = str(c["output_tokens"]) if c.get("output_tokens") is not None else "unavailable"
-                th_str = str(c["thinking_tokens"]) if c.get("thinking_tokens") is not None else "none"
-                tot_str = str(c["total_tokens"]) if c.get("total_tokens") is not None else "unavailable"
-                lines.append(f"TOKENS: input={in_str} output={out_str} thinking={th_str} total={tot_str}")
+                lines.append(f"Call #{c['call_number']}: Model: {c['model']} | Area: {c['area']} | Tokens: {c.get('total_tokens', 'unavailable')}")
         return "\n".join(lines)
 
     def render_events_text(self) -> str:

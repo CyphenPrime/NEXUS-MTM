@@ -51,13 +51,15 @@ def save_outputs(
     # 1. plan.json
     (out_path / "plan.json").write_text(json.dumps(plan, indent=2), encoding="utf-8")
 
-    # 2. plan.md
+    # 2. plan.md & plan.txt
     plan_md = render_markdown(plan)
     (out_path / "plan.md").write_text(plan_md, encoding="utf-8")
+    (out_path / "plan.txt").write_text(plan_md, encoding="utf-8")
 
-    # 3. trace.json
+    # 3. trace.json & trace.txt
     trace_data = trace.to_dict() if hasattr(trace, "to_dict") else trace
     (out_path / "trace.json").write_text(json.dumps(trace_data, indent=2), encoding="utf-8")
+    (out_path / "trace.txt").write_text(trace_text, encoding="utf-8")
 
     # 4. rejected.json
     (out_path / "rejected.json").write_text(json.dumps(rejected, indent=2), encoding="utf-8")

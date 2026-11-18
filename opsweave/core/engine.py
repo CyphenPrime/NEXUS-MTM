@@ -127,11 +127,21 @@ def plan(ledger: Ledger) -> dict:
     if not venue_options_raw:
         unknowns.append("No venue options provided")
 
+    # Check facility equivalence mapping
+    ACCESSIBILITY_SYNONYMS = {"step-free access", "step-free", "ramp access", "wheelchair", "wheelchair accessible", "ground floor"}
+
     for v in venue_options_raw:
         v_name = v.get("name") or "unnamed"
         cap = v.get("value") or 0
         price = v.get("price") or 0
-        facs = set(v.get("facilities") or [])
+        raw_facs = [str(f).strip().lower() for f in (v.get("facilities") or [])]
+        facs = set(raw_facs)
+
+        # Expand accessibility synonyms
+        if any(f in ACCESSIBILITY_SYNONYMS or any(acc in f for acc in ["ramp", "wheelchair", "ground floor", "step-free"]) for f in facs):
+            facs.add("step-free access")
+            facs.add("step-free")
+            facs.add("ramp access")
 
         reasons = []
         is_eligible = True
@@ -144,7 +154,16 @@ def plan(ledger: Ledger) -> dict:
             is_eligible = False
             reasons.append("Marked unavailable")
 
-        missing_facs = [need for need in venue_needs if need not in facs]
+        missing_facs = []
+        for need in venue_needs:
+            need_norm = need.strip().lower()
+            # If need is accessibility related
+            if need_norm in ACCESSIBILITY_SYNONYMS or any(acc in need_norm for acc in ["ramp", "wheelchair", "ground floor", "step-free"]):
+                if not any(f in facs for f in ["step-free access", "step-free", "ramp access"]):
+                    missing_facs.append(need)
+            elif need_norm not in facs:
+                missing_facs.append(need)
+
         if missing_facs:
             is_eligible = False
             reasons.append(f"Missing required facilities: {', '.join(missing_facs)}")

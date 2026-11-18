@@ -11,9 +11,13 @@ def test_sample_pack_offline_matches_expected():
     and verifies full compliance with README §11 expected fixture values.
     """
     base_dir = Path(__file__).resolve().parent.parent
-    messages_path = base_dir / "data" / "messages.txt"
+    messages_path = base_dir / "tests" / "fixtures" / "sample_messages.txt"
     fixture_path = base_dir / "tests" / "fixtures" / "sample_reading_output.json"
     expected_path = base_dir / "tests" / "fixtures" / "sample_expected.json"
+
+    # Use sample_messages.txt if exists, otherwise fallback
+    if not messages_path.exists():
+        messages_path = base_dir / "data" / "messages.txt"
 
     messages = read_messages(str(messages_path))
     raw_fixture = fixture_path.read_text(encoding="utf-8")
